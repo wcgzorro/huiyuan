@@ -9,8 +9,8 @@ import '@/styles/globals.css'
 // const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: '绘画爱好者社区',
-  description: '绘园|绘画爱好者社区|分享你的绘画.',
+  title: '猫和狗',
+  description: 'cat&dog|猫猫和狗狗｜爱猫爱狗',
 }
 
 export default function RootLayout({
