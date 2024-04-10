@@ -16,7 +16,7 @@ const Navbar = async () => {
       <div className='container max-w-8xl h-full mx-auto flex items-center justify-between gap-2 pr-2 pl-2'>
         {/* logo */}
         <Link href='/' className='flex gap-2 items-center'>
-          <IconLogo className='h-8 w-8 sm:h-10 sm:w-10'></IconLogo>
+          <IconLogo className='h-12 w-12 sm:h-12 sm:w-12'></IconLogo>
           {/* <Icons.logo className='h-8 w-8 sm:h-6 sm:w-6' /> */}
           <p className='hidden text-zinc-700 text-lg font-medium md:block'>Cat&Dog</p>
         </Link>
