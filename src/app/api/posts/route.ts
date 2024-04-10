@@ -4,12 +4,16 @@ import { z } from 'zod'
 
 export async function GET(req: Request) {
   const url = new URL(req.url)
-
   const session = await getAuthSession()
+
+  // 获取请求的 Referer 头部
+  const referer = req.headers.get('Referer');
+  const isMyFeedRequest = referer && new URL(referer).pathname === '/myfeed';
+  // console.log("isMyFeedRequest",isMyFeedRequest);
 
   let followedCommunitiesIds: string[] = []
 
-  if (session) {
+  if (session && isMyFeedRequest) {
     const followedCommunities = await db.subscription.findMany({
       where: {
         userId: session.user.id,
@@ -43,7 +47,7 @@ export async function GET(req: Request) {
           name: subredditName,
         },
       }
-    } else if (session) {
+    } else if (session && isMyFeedRequest) {
       whereClause = {
         subreddit: {
           id: {

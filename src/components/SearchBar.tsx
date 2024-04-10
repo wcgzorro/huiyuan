@@ -73,14 +73,14 @@ const SearchBar: FC<SearchBarProps> = ({}) => {
         }}
         value={input}
         className='outline-none border-none focus:border-none focus:outline-none ring-0'
-        placeholder='Search communities...'
+        placeholder='搜索...'
       />
 
       {input.length > 0 && (
         <CommandList className='absolute bg-white top-full inset-x-0 shadow rounded-b-md'>
-          {isFetched && <CommandEmpty>No results found.</CommandEmpty>}
+          {isFetched && <CommandEmpty>没有发现结果</CommandEmpty>}
           {(queryResults?.length ?? 0) > 0 ? (
-            <CommandGroup heading='Communities'>
+            <CommandGroup heading='版块'>
               {queryResults?.map((subreddit) => (
                 <CommandItem
                   onSelect={(e) => {
@@ -90,7 +90,7 @@ const SearchBar: FC<SearchBarProps> = ({}) => {
                   key={subreddit.id}
                   value={subreddit.name}>
                   <Users className='mr-2 h-4 w-4' />
-                  <a href={`/r/${subreddit.name}`}>r/{subreddit.name}</a>
+                  <a href={`/r/${subreddit.name}`}>版块/{subreddit.name}</a>
                 </CommandItem>
               ))}
             </CommandGroup>

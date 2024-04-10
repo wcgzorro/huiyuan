@@ -54,14 +54,14 @@ const CreateComment: FC<CreateCommentProps> = ({ postId, replyToId }) => {
 
   return (
     <div className='grid w-full gap-1.5'>
-      <Label htmlFor='comment'>Your comment</Label>
+      <Label htmlFor='comment'>留言区</Label>
       <div className='mt-2'>
         <Textarea
           id='comment'
           value={input}
           onChange={(e) => setInput(e.target.value)}
           rows={1}
-          placeholder='What are your thoughts?'
+          placeholder='你的留言'
         />
 
         <div className='mt-2 flex justify-end'>
@@ -69,7 +69,7 @@ const CreateComment: FC<CreateCommentProps> = ({ postId, replyToId }) => {
             isLoading={isLoading}
             disabled={input.length === 0}
             onClick={() => comment({ postId, text: input, replyToId })}>
-            Post
+            提交
           </Button>
         </div>
       </div>

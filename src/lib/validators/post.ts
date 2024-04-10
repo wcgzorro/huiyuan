@@ -3,11 +3,11 @@ import { z } from 'zod'
 export const PostValidator = z.object({
   title: z
     .string()
-    .min(3, {
-      message: 'Title must be at least 3 characters long',
+    .min(1, {
+      message: '标题不能为空',
     })
     .max(128, {
-      message: 'Title must be less than 128 characters long',
+      message: '标题长度不能超过128个字符',
     }),
   subredditId: z.string(),
   content: z.any(),

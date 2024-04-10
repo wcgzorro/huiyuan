@@ -5,7 +5,7 @@ import { PostVoteValidator } from '@/lib/validators/vote'
 import { CachedPost } from '@/types/redis'
 import { z } from 'zod'
 
-const CACHE_AFTER_UPVOTES = 1
+const CACHE_AFTER_UPVOTES = 0
 
 export async function PATCH(req: Request) {
   try {
@@ -61,16 +61,16 @@ export async function PATCH(req: Request) {
         }, 0)
 
         if (votesAmt >= CACHE_AFTER_UPVOTES) {
-          const cachePayload: CachedPost = {
-            authorUsername: post.author.username ?? '',
+          const cachePayload = {
+            authorUsername: post.author.name ?? '',
             content: JSON.stringify(post.content),
             id: post.id,
             title: post.title,
-            currentVote: null,
-            createdAt: post.createdAt,
+            currentVote: "null",
+            createdAt: post.createdAt.toISOString(),
           }
 
-          await redis.hset(`post:${postId}`, cachePayload) // Store the post data as a hash
+          await redis.hSet(`post:${postId}`, cachePayload) // Store the post data as a hash
         }
 
         return new Response('OK')
@@ -97,16 +97,16 @@ export async function PATCH(req: Request) {
       }, 0)
 
       if (votesAmt >= CACHE_AFTER_UPVOTES) {
-        const cachePayload: CachedPost = {
-          authorUsername: post.author.username ?? '',
+        const cachePayload = {
+          authorUsername: post.author.name ?? '',
           content: JSON.stringify(post.content),
           id: post.id,
           title: post.title,
-          currentVote: voteType,
-          createdAt: post.createdAt,
+          currentVote: voteType ? voteType : 'null',
+          createdAt: post.createdAt.toISOString(),
         }
 
-        await redis.hset(`post:${postId}`, cachePayload) // Store the post data as a hash
+        await redis.hSet(`post:${postId}`, cachePayload) // Store the post data as a hash
       }
 
       return new Response('OK')
@@ -129,16 +129,16 @@ export async function PATCH(req: Request) {
     }, 0)
 
     if (votesAmt >= CACHE_AFTER_UPVOTES) {
-      const cachePayload: CachedPost = {
-        authorUsername: post.author.username ?? '',
+      const cachePayload = {
+        authorUsername: post.author.name ?? '',
         content: JSON.stringify(post.content),
         id: post.id,
         title: post.title,
-        currentVote: voteType,
-        createdAt: post.createdAt,
+        currentVote: voteType ? voteType : 'null',
+        createdAt: post.createdAt.toISOString(),
       }
 
-      await redis.hset(`post:${postId}`, cachePayload) // Store the post data as a hash
+      await redis.hSet(`post:${postId}`, cachePayload) // Store the post data as a hash
     }
 
     return new Response('OK')

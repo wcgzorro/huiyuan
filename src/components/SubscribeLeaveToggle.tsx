@@ -52,8 +52,8 @@ const SubscribeLeaveToggle = ({
         router.refresh()
       })
       toast({
-        title: 'Subscribed!',
-        description: `You are now subscribed to r/${subredditName}`,
+        title: '关注成功!',
+        description: `已关注版块/${subredditName}`,
       })
     },
   })
@@ -81,8 +81,8 @@ const SubscribeLeaveToggle = ({
         router.refresh()
       })
       toast({
-        title: 'Unsubscribed!',
-        description: `You are now unsubscribed from/${subredditName}`,
+        title: '取消关注成功!',
+        description: `已取消对版块/${subredditName}的关注`,
       })
     },
   })
@@ -92,14 +92,14 @@ const SubscribeLeaveToggle = ({
       className='w-full mt-1 mb-4'
       isLoading={isUnsubLoading}
       onClick={() => unsubscribe()}>
-      Leave community
+      取消关注
     </Button>
   ) : (
     <Button
       className='w-full mt-1 mb-4'
       isLoading={isSubLoading}
       onClick={() => subscribe()}>
-      Join to post
+      关注该版块
     </Button>
   )
 }

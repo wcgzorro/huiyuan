@@ -28,16 +28,16 @@ const Page = () => {
       if (err instanceof AxiosError) {
         if (err.response?.status === 409) {
           return toast({
-            title: 'Subreddit already exists.',
-            description: 'Please choose a different name.',
+            title: '版块名已存在.',
+            description: '请重新输入一个版块名称.',
             variant: 'destructive',
           })
         }
 
         if (err.response?.status === 422) {
           return toast({
-            title: 'Invalid subreddit name.',
-            description: 'Please choose a name between 3 and 21 letters.',
+            title: '版块名错误.',
+            description: '版块名长度需要在1到21个字符之间.',
             variant: 'destructive',
           })
         }
@@ -48,8 +48,8 @@ const Page = () => {
       }
 
       toast({
-        title: 'There was an error.',
-        description: 'Could not create subreddit.',
+        title: '出错了.',
+        description: '不能创版块.',
         variant: 'destructive',
       })
     },
@@ -62,24 +62,24 @@ const Page = () => {
     <div className='container flex items-center h-full max-w-3xl mx-auto'>
       <div className='relative bg-white w-full h-fit p-4 rounded-lg space-y-6'>
         <div className='flex justify-between items-center'>
-          <h1 className='text-xl font-semibold'>Create a Community</h1>
+          <h1 className='text-xl font-semibold'>创建新版块</h1>
         </div>
 
         <hr className='bg-red-500 h-px' />
 
         <div>
-          <p className='text-lg font-medium'>Name</p>
+          <p className='text-lg font-medium'>请填写版块名称</p>
           <p className='text-xs pb-2'>
-            Community names including capitalization cannot be changed.
+            名称不能为空
           </p>
           <div className='relative'>
-            <p className='absolute text-sm left-0 w-8 inset-y-0 grid place-items-center text-zinc-400'>
-              r/
+            <p className='absolute text-sm left-1 w-18 inset-y-0 grid place-items-center text-zinc-400'>
+              版块/
             </p>
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className='pl-6'
+              className='pl-10'
             />
           </div>
         </div>
@@ -89,13 +89,13 @@ const Page = () => {
             disabled={isLoading}
             variant='subtle'
             onClick={() => router.back()}>
-            Cancel
+            取消
           </Button>
           <Button
             isLoading={isLoading}
             disabled={input.length === 0}
             onClick={() => createCommunity()}>
-            Create Community
+            确认
           </Button>
         </div>
       </div>

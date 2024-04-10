@@ -1,25 +1,25 @@
 import { ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { formatDistanceToNowStrict } from 'date-fns'
-import locale from 'date-fns/locale/en-US'
+import locale from 'date-fns/locale/zh-CN'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
 const formatDistanceLocale = {
-  lessThanXSeconds: 'just now',
-  xSeconds: 'just now',
-  halfAMinute: 'just now',
-  lessThanXMinutes: '{{count}}m',
-  xMinutes: '{{count}}m',
-  aboutXHours: '{{count}}h',
-  xHours: '{{count}}h',
-  xDays: '{{count}}d',
-  aboutXWeeks: '{{count}}w',
+  lessThanXSeconds: '刚才',
+  xSeconds: '刚才',
+  halfAMinute: '刚才',
+  lessThanXMinutes: '{{count}}分钟',
+  xMinutes: '{{count}}分钟',
+  aboutXHours: '{{count}}小时',
+  xHours: '{{count}}小时',
+  xDays: '{{count}}天',
+  aboutXWeeks: '{{count}}周',
   xWeeks: '{{count}}w',
-  aboutXMonths: '{{count}}m',
-  xMonths: '{{count}}m',
+  aboutXMonths: '{{count}}月',
+  xMonths: '{{count}}月',
   aboutXYears: '{{count}}y',
   xYears: '{{count}}y',
   overXYears: '{{count}}y',
@@ -37,8 +37,9 @@ function formatDistance(token: string, count: number, options?: any): string {
     if (options.comparison > 0) {
       return 'in ' + result
     } else {
-      if (result === 'just now') return result
-      return result + ' ago'
+      if (result === '刚才') return result
+      // return result + ' ago'
+      return result + '之前'
     }
   }
 

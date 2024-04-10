@@ -7,13 +7,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import TextareaAutosize from 'react-textarea-autosize'
 import { z } from 'zod'
-
 import { toast } from '@/hooks/use-toast'
-import { uploadFiles } from '@/lib/uploadthing'
+// import { uploadFiles } from '@/lib/uploadthing'
 import { PostCreationRequest, PostValidator } from '@/lib/validators/post'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-
 import '@/styles/editor.css'
 
 type FormData = z.infer<typeof PostValidator>
@@ -53,8 +51,8 @@ export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
     },
     onError: () => {
       return toast({
-        title: 'Something went wrong.',
-        description: 'Your post was not published. Please try again.',
+        title: '出了点问题.',
+        description: '你的帖子发布失败，请重试.',
         variant: 'destructive',
       })
     },
@@ -66,7 +64,7 @@ export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
       router.refresh()
 
       return toast({
-        description: 'Your post has been published.',
+        description: '你的帖子已经发表了.',
       })
     },
   })
@@ -75,7 +73,7 @@ export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
     const EditorJS = (await import('@editorjs/editorjs')).default
     const Header = (await import('@editorjs/header')).default
     const Embed = (await import('@editorjs/embed')).default
-    const Table = (await import('@editorjs/table')).default
+    // const Table = (await import('@editorjs/table')).default
     const List = (await import('@editorjs/list')).default
     const Code = (await import('@editorjs/code')).default
     const LinkTool = (await import('@editorjs/link')).default
@@ -88,7 +86,7 @@ export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
         onReady() {
           ref.current = editor
         },
-        placeholder: 'Type here to write your post...',
+        placeholder: '输入图文内容...',
         inlineToolbar: true,
         data: { blocks: [] },
         tools: {
@@ -104,24 +102,62 @@ export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
             config: {
               uploader: {
                 async uploadByFile(file: File) {
-                  // upload to uploadthing
-                  const [res] = await uploadFiles([file], 'imageUploader')
+                  // // upload to uploadthing
+                  // const [res] = await uploadFiles([file], 'imageUploader')
 
-                  return {
-                    success: 1,
-                    file: {
-                      url: res.fileUrl,
-                    },
+                  // return {
+                  //   success: 1,
+                  //   file: {
+                  //     url: res.fileUrl,
+                  //   },
+                  // }
+
+                  //upload to localhost
+                  const formData = new FormData();
+                  formData.append('file', file);
+                  console.log("file",file);
+                  try{
+                    // 发送POST请求到你的文件上传API
+                    const response = await axios.post('/api/upload', formData, {
+                      headers: {
+                        'Content-Type': 'multipart/form-data',
+                      },
+                    });
+
+                    // 假设你的API返回文件在服务器上的访问URL
+                    const fileUrl = response.data.url;
+
+                    return {
+                      success: 1,
+                      file: {
+                        url: fileUrl,
+                      },
+                    }
+                  }catch(error){
+                    console.log('Upload failed', error);
+                    return {
+                      success: 0,
+                    };
                   }
+
+
                 },
               },
+              types: 'image/*,.HEIC,.heic', // 添加对 HEIC 文件的支持
             },
           },
           list: List,
           code: Code,
           inlineCode: InlineCode,
-          table: Table,
+          // table: Table,
           embed: Embed,
+          // video: {
+          //   class: VideoTool,
+          //   config: {
+          //     // 视频工具的配置选项
+              
+          //   }
+          // }
         },
       })
     }
@@ -132,7 +168,7 @@ export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
       for (const [_key, value] of Object.entries(errors)) {
         value
         toast({
-          title: 'Something went wrong.',
+          title: '出了点问题.',
           description: (value as { message: string }).message,
           variant: 'destructive',
         })
@@ -197,16 +233,16 @@ export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
               _titleRef.current = e
             }}
             {...rest}
-            placeholder='Title'
+            placeholder='标题'
             className='w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none'
           />
           <div id='editor' className='min-h-[500px]' />
           <p className='text-sm text-gray-500'>
-            Use{' '}
+            按{' '}
             <kbd className='rounded-md border bg-muted px-1 text-xs uppercase'>
               Tab
             </kbd>{' '}
-            to open the command menu.
+            键打开功能菜单.
           </p>
         </div>
       </form>

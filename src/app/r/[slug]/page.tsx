@@ -13,11 +13,11 @@ interface PageProps {
 
 const page = async ({ params }: PageProps) => {
   const { slug } = params
-
+  const decodedSlug = decodeURIComponent(slug);
   const session = await getAuthSession()
 
   const subreddit = await db.subreddit.findFirst({
-    where: { name: slug },
+    where: { name: decodedSlug },
     include: {
       posts: {
         include: {
@@ -38,8 +38,9 @@ const page = async ({ params }: PageProps) => {
 
   return (
     <>
+      {/* <span>版块/</span> */}
       <h1 className='font-bold text-3xl md:text-4xl h-14'>
-        r/{subreddit.name}
+        {subreddit.name}
       </h1>
       <MiniCreatePost session={session} />
       <PostFeed initialPosts={subreddit.posts} subredditName={subreddit.name} />

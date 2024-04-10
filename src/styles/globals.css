@@ -79,3 +79,18 @@
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
+
+/* 搜索文字的高度设定 */
+@media (min-width: 640px) { /* 对应于Tailwind CSS的sm断点 */
+  .custom-padding {
+    padding-top: 0.875rem; /* 调整为适合PC的值 */
+    padding-bottom: 0.875rem;
+  }
+}
+
+@media (max-width: 639px) { /* 小于640px时，通常用于手机 */
+  .custom-padding {
+    padding-top: 0.5rem; /* 调整为适合手机的值 */
+    padding-bottom: 0.8rem;
+  }
+}

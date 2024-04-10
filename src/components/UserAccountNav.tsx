@@ -39,15 +39,15 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href='/'>Feed</Link>
+          <Link href='/myfeed'>我的关注</Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <Link href='/r/create'>Create Community</Link>
+          <Link href='/r/create'>创建版块</Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <Link href='/settings'>Settings</Link>
+          <Link href='/settings'>设置</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -58,7 +58,7 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
               callbackUrl: `${window.location.origin}/sign-in`,
             })
           }}>
-          Sign out
+          退出登录
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

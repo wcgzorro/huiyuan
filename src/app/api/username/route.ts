@@ -17,12 +17,12 @@ export async function PATCH(req: Request) {
     // check if username is taken
     const username = await db.user.findFirst({
       where: {
-        username: name,
+        name: name,
       },
     })
 
     if (username) {
-      return new Response('Username is taken', { status: 409 })
+      return new Response('用户名已被占用', { status: 409 })
     }
 
     // update username
@@ -31,7 +31,7 @@ export async function PATCH(req: Request) {
         id: session.user.id,
       },
       data: {
-        username: name,
+        name: name,
       },
     })
 

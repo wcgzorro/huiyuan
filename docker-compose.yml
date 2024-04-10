@@ -1,0 +1,102 @@
+version: "3.8"
+
+services:
+  huiyuan:
+    #app服务使用 build: . 来构建 Dockerfile。
+    build: .
+    #podman build -t huiyuan-app:latest . 根据Dockerfile创建镜像
+    #指定镜像名称
+    image: huiyuan:latest
+    ports:
+      - "3000:3000"
+    environment:
+      #确保 DATABASE_URL 和 REDIS_URL 环境变量使用服务名，例如 mysql 和 redis。
+      - NEXTAUTH_SECRET:woaiwo
+      - DATABASE_URL=mysql://your_user:your_user_password@60.205.108.91:3306/your_database
+      - REDIS_URL=redis://:your_redis_password@60.205.108.91:6379
+      - UPLOAD_SERVER=http://img.ipaintgarden.com/upload
+      - UPLOAD_SECRET=img-generated-api-key
+      #微信回调域名
+      - NEXT_PUBLIC_SERVER_DOMAIN=http://hy.ipaintgarden.com
+      #绘园公众号
+      - NEXT_PUBLIC_WEIXIN_APP_ID=wxf32187893c13aafb
+      - WEIXIN_APP_SECRET=333e179ffcb17113165d8624de32ad23
+      #绘园开放平台
+      - NEXT_PUBLIC_WX_OPEN_APP_ID=wxf5e5974b6aacfafb
+      - WX_OPEN_APP_SECRET=b14baebd47f83f11bebd7ba17a275af9
+    # volumes:
+    #   - /opt/prisma-engines:/opt/prisma-engines
+    #depends_on 表示 app 服务依赖于 mysql 和 redis 服务
+    depends_on: 
+      - mysql
+      - redis
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: your_password # Replace with your desired password
+      MYSQL_DATABASE: your_database # Replace with your desired database name
+      MYSQL_USER: your_user # Replace with your desired user
+      MYSQL_PASSWORD: your_user_password # Replace with your desired user password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    command: redis-server --requirepass your_redis_password # Replace with your desired Redis password
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mysql_data:
+  redis_data:
+
+  #npx prisma generate
+  #打包上传后解压
+  #unzip -o huiyuan.zip
+
+  #您可以通过 docker-compose up --build 启动所有服务。这样就可以确保您的应用容器能够与数据库和缓存容器通信
+  #容器启动后手动运行
+  #进入到运行你的 Node.js 应用的 Docker 容器内部，然后运行
+  #将schema.prisma 文件中定义的模型，创建到数据库中
+  #npx prisma db push
+
+  # 根据Dockerfile创建镜像
+  # podman build -t huiyuan-app:latest . 
+  # docker build -t huiyuan-app:latest .
+  # docker run -p 3000:3000 --name huiyuan-app-1 huiyuan-app
+  # podman-compose up
+
+  # podman exec -it huiyuan_app_1 sh  进入容器中
+  # npx prisma db push 数据库迁移或创建操作
+ 
+
+ #运行 podman-compose down 命令会停止并删除由 podman-compose up 命令启动的所有容器
+ #这个命令在你需要清理所有由 docker-compose.yml 文件定义的服务时非常有用，比如在开发结束后，或者想要重启所有服务时。它为你提供了一种快速将环境恢复到初始状态的方法。
+ #如果你想在删除容器的同时自动清理相关的卷，可以在删除容器时使用 docker-compose down -v 命令，其中 -v 标志会删除与在 docker-compose.yml 文件中定义的服务相关联的所有卷。
+ #请记住，删除卷是不可逆的操作，所以在执行删除操作之前，请确保你已经保存了所有需要的数据。
+
+# podman images
+# podman rmi 8ce071eea1df 019814493c7a 170a1e90f843
+# 修改docker-compose.yml文件后
+# podman-compose down
+# podman-compose up --build  重新生成镜像和容器
+
+# docker-compose up 是 Docker Compose 的一个命令，用于启动并运行整个应用。你提到的两种形式之间的区别在于是否附带了 --build 选项：
+
+# docker-compose up：这个命令会启动并运行 docker-compose.yml 文件中定义的所有服务。如果服务所依赖的镜像不存在，Docker Compose 会尝试从本地或远程镜像仓库拉取这些镜像。如果镜像已经存在，它不会尝试重新构建镜像，而是直接使用现有的镜像来启动容器。
+
+# docker-compose up --build：这个命令除了执行 docker-compose up 的所有操作之外，还会强制构建（或重建）服务所依赖的镜像，即使这些镜像已经存在。这对于确保使用的是最新的代码和依赖非常有用，特别是在开发过程中，当你频繁更改应用代码或依赖时。在构建完成后，它会启动并运行服务。
+
+# 简而言之，不带 --build 选项时，Docker Compose 会尝试使用现有镜像来启动服务，而不会尝试构建新的镜像。当使用 --build 选项时，Docker Compose 会先构建（或重建）镜像，然后再启动服务，这样可以确保你的容器运行的是最新版本的镜像。
+
+# 在开发过程中，如果你对 Dockerfile 或服务的构建上下文（如项目文件）进行了更改，使用 docker-compose up --build 会很有帮助，因为它确保了你的更改会被包含在新构建的镜像中。如果你确定没有对服务的依赖或代码进行更改，或者你只是想快速启动服务，使用 docker-compose up 就足够了。
+
+
+
+
+

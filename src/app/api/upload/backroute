@@ -1,0 +1,61 @@
+import { getAuthSession } from '@/lib/auth'
+import { writeFile } from "fs/promises";
+import { NextResponse } from "next/server";
+import { v4 as uuidv4 } from 'uuid'; // 引入uuid
+import { existsSync, mkdirSync } from 'fs';
+
+export async function POST(request: Request) {
+
+    const session = await getAuthSession()
+    if (!session?.user) {
+      return new Response('Unauthorized', { status: 401 })
+    }
+
+    const formData = await request.formData();
+    // 获取上传文件
+    const file = formData.get("file") as File;
+    // 定义文件保存的目录和访问路径
+    const currentYear = new Date().getFullYear();
+    const uploadDir = `./public/uploads/${currentYear}/`;
+    const accessPath = `/uploads/${currentYear}/`;
+
+    if (!file) {
+        return new NextResponse(JSON.stringify({ error: 'No file uploaded' }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
+
+    // 检查文件大小
+    const maxFileSize = 4 * 1024 * 1024; // 4MB
+    if (file.size > maxFileSize) {
+        return new NextResponse(JSON.stringify({ error: 'File is too large' }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
+
+  //   // 使用uuid生成唯一文件名
+  //   const fileExtension = file.name.split('.').pop(); // 获取文件扩展名
+  //   const fileName = uuidv4() + '.' + fileExtension; // 生成唯一文件名
+  //   // 将文件保存到服务器的文件系统中
+  //   const fileBuffer = await file.arrayBuffer();
+  //   // 生成文件保存路径
+  //   const filePath = uploadDir + fileName;
+  //   // 生成访问URL
+  //   const fileUrl = request.headers.get("origin") + accessPath + fileName;
+
+  //   // 检查上传目录是否存在，如果不存在则创建
+  //   if (!existsSync(uploadDir)) {
+  //     mkdirSync(uploadDir, { recursive: true }); // 使用 recursive 选项创建嵌套目录
+  //   }
+  //   await writeFile(filePath, Buffer.from(fileBuffer));
+
+  // return new NextResponse(JSON.stringify({ url: fileUrl }), {
+  //   status: 200,
+  //   headers: {
+  //     "Content-Type": "application/json"
+  //   }
+  // });
+}
+

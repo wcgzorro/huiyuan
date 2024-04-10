@@ -10,7 +10,7 @@ import { notFound } from 'next/navigation'
 import { ReactNode } from 'react'
 
 export const metadata: Metadata = {
-  title: 'Breadit',
+  title: '绘园',
   description: 'A Reddit clone built with Next.js and TypeScript.',
 }
 
@@ -22,9 +22,10 @@ const Layout = async ({
   params: { slug: string }
 }) => {
   const session = await getAuthSession()
+  const decodedSlug = decodeURIComponent(slug);
 
   const subreddit = await db.subreddit.findFirst({
-    where: { name: slug },
+    where: { name: decodedSlug },
     include: {
       posts: {
         include: {
@@ -40,7 +41,7 @@ const Layout = async ({
     : await db.subscription.findFirst({
         where: {
           subreddit: {
-            name: slug,
+            name: decodedSlug,
           },
           user: {
             id: session.user.id,
@@ -55,13 +56,13 @@ const Layout = async ({
   const memberCount = await db.subscription.count({
     where: {
       subreddit: {
-        name: slug,
+        name: decodedSlug,
       },
     },
   })
 
   return (
-    <div className='sm:container max-w-7xl mx-auto h-full pt-12'>
+    <div className='sm:container max-w-7xl mx-auto h-full pt-6'>
       <div>
         <ToFeedButton />
 
@@ -71,26 +72,26 @@ const Layout = async ({
           {/* info sidebar */}
           <div className='overflow-hidden h-fit rounded-lg border border-gray-200 order-first md:order-last'>
             <div className='px-6 py-4'>
-              <p className='font-semibold py-3'>About r/{subreddit.name}</p>
+              <p className='font-semibold py-3'>版块/{subreddit.name}</p>
             </div>
             <dl className='divide-y divide-gray-100 px-6 py-4 text-sm leading-6 bg-white'>
               <div className='flex justify-between gap-x-4 py-3'>
-                <dt className='text-gray-500'>Created</dt>
+                <dt className='text-gray-500'>创建于</dt>
                 <dd className='text-gray-700'>
                   <time dateTime={subreddit.createdAt.toDateString()}>
-                    {format(subreddit.createdAt, 'MMMM d, yyyy')}
+                    {format(subreddit.createdAt, 'yyyy-MM-dd')}
                   </time>
                 </dd>
               </div>
               <div className='flex justify-between gap-x-4 py-3'>
-                <dt className='text-gray-500'>Members</dt>
+                <dt className='text-gray-500'>已关注</dt>
                 <dd className='flex items-start gap-x-2'>
-                  <div className='text-gray-900'>{memberCount}</div>
+                  <div className='text-gray-900'>{memberCount}人</div>
                 </dd>
               </div>
               {subreddit.creatorId === session?.user?.id ? (
                 <div className='flex justify-between gap-x-4 py-3'>
-                  <dt className='text-gray-500'>You created this community</dt>
+                  <dt className='text-gray-500'>你创造了这个版块</dt>
                 </div>
               ) : null}
 
@@ -106,8 +107,8 @@ const Layout = async ({
                   variant: 'outline',
                   className: 'w-full mb-6',
                 })}
-                href={`r/${slug}/submit`}>
-                Create Post
+                href={`r/${decodedSlug}/submit`}>
+                发布帖子
               </Link>
             </dl>
           </div>

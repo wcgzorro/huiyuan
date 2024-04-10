@@ -45,14 +45,14 @@ const CommandInput = React.forwardRef<
 >(({ className, isLoading, ...props }, ref) => (
   <div className='flex items-center border-b px-3' cmdk-input-wrapper=''>
     {isLoading ? (
-      <Loader2 className='mr-2 h-4 w-4 shrink-0 opacity-50 animate-spin' />
+      <Loader2 className='mr-2 h-4 w-4 shrink-0 opacity-50 animate-spin align-middle md:translate-y-0 translate-y-[-2px]' />
     ) : (
-      <Search className='mr-2 h-4 w-4 shrink-0 opacity-50' />
+      <Search className='mr-2 h-4 w-4 shrink-0 opacity-50 align-middle md:translate-y-0 translate-y-[-2px]' />
     )}
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        'flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-11 w-full rounded-md bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 py-3 custom-padding',
         className
       )}
       {...props}
