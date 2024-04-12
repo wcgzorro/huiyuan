@@ -1,19 +1,19 @@
 version: "3.8"
 
 services:
-  huiyuan:
+  catanddog:
     #app服务使用 build: . 来构建 Dockerfile。
     build: .
-    #podman build -t huiyuan-app:latest . 根据Dockerfile创建镜像
+    #podman build -t catanddog:latest . 根据Dockerfile创建镜像
     #指定镜像名称
-    image: huiyuan:latest
+    image: catanddog:latest
     ports:
-      - "3000:3000"
+      - "3001:3001"
     environment:
       #确保 DATABASE_URL 和 REDIS_URL 环境变量使用服务名，例如 mysql 和 redis。
       - NEXTAUTH_SECRET:woaiwo
-      - DATABASE_URL=mysql://your_user:your_user_password@60.205.108.91:3306/your_database
-      - REDIS_URL=redis://:your_redis_password@60.205.108.91:6379
+      - DATABASE_URL=mysql://your_user:your_user_password@60.205.108.91:3307/your_database
+      - REDIS_URL=redis://:your_redis_password@60.205.108.91:6380
       - UPLOAD_SERVER=http://img.ipaintgarden.com/upload
       - UPLOAD_SECRET=img-generated-api-key
       #微信回调域名
@@ -38,16 +38,17 @@ services:
       MYSQL_DATABASE: your_database # Replace with your desired database name
       MYSQL_USER: your_user # Replace with your desired user
       MYSQL_PASSWORD: your_user_password # Replace with your desired user password
+      MYSQL_TCP_PORT: 3307 # Set MySQL to listen on port 3307
     ports:
-      - "3306:3306"
+      - "3307:3307"
     volumes:
       - mysql_data:/var/lib/mysql
 
   redis:
     image: redis:latest
-    command: redis-server --requirepass your_redis_password # Replace with your desired Redis password
+    command: redis-server --port 6380 --requirepass your_redis_password # Replace with your desired Redis password
     ports:
-      - "6379:6379"
+      - "6380:6380"
     volumes:
       - redis_data:/data
 

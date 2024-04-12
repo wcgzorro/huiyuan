@@ -49,7 +49,7 @@ export default function SignInPage() {
         />
         <button type="submit">登录</button>
       </form>
-      <UserAuthForm />
+      {/* <UserAuthForm /> */}
       {/* <p className="px-8 text-center text-sm text-muted-foreground">
         New to Breaddit?
         <Link

@@ -26,8 +26,8 @@ RUN npx prisma generate
 # 构建 Next.js 项目
 RUN yarn build
 
-# 暴露 3000 端口
-EXPOSE 3000
+# 暴露 3001 端口
+EXPOSE 3001
 
 # 启动 Next.js 服务器
 CMD ["yarn", "start"]
